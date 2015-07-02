@@ -1780,10 +1780,10 @@ static void do_streamcopy(InputStream *ist, OutputStream *ost, const AVPacket *p
         }
     }
     
-    if (pkt->pos >= f->stop_bytes) {
-	close_output_stream(ost);
-	return;
-    }
+    /*if (pkt->pos >= f->stop_bytes) {
+        close_output_stream(ost);
+        return;
+    }*/
     /* force the input stream PTS */
     if (ost->enc_ctx->codec_type == AVMEDIA_TYPE_VIDEO)
         ost->sync_opts++;
