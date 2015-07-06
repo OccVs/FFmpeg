@@ -154,7 +154,7 @@ static void init_options(OptionsContext *o)
     memset(o, 0, sizeof(*o));
 
     o->stop_time = INT64_MAX;
-    //o->stop_bytes = INT64_MAX;
+    o->stop_bytes = INT64_MAX;
     o->mux_max_delay  = 0.7;
     o->start_time     = AV_NOPTS_VALUE;
     o->recording_time = INT64_MAX;
@@ -953,18 +953,18 @@ static int open_input_file(OptionsContext *o, const char *filename)
         }
     }
 
-    //av_log(NULL, AV_LOG_INFO, "Stopping at %0" PRId64 "\n", o->stop_bytes);
+    av_log(NULL, AV_LOG_DEBUG, "Stopping at %0" PRId64 "\n", o->stop_bytes);
     
     /* if byte seeking requested */
-    //if (o->start_bytes != AV_NOPTS_VALUE) {
-    //    av_log(NULL, AV_LOG_INFO, "Seeking to %0" PRId64 "\n", o->start_bytes);
-    //    ff_read_frame_flush(ic);
-    //    ret = seek_frame_byte(ic, 0, o->start_bytes, 0);
-    //    if (ret < 0) {
-    //        av_log(NULL, AV_LOG_WARNING, "%s: could not seek to position %0" PRId64 "\n",
-    //               filename, o->start_bytes);
-    //    }
-    //}
+    if (o->start_bytes != AV_NOPTS_VALUE) {
+        av_log(NULL, AV_LOG_DEBUG, "Seeking to %0" PRId64 "\n", o->start_bytes);
+        ff_read_frame_flush(ic);
+        ret = seek_frame_byte(ic, 0, o->start_bytes, 0);
+        if (ret < 0) {
+            av_log(NULL, AV_LOG_WARNING, "%s: could not seek to position %0" PRId64 "\n",
+                   filename, o->start_bytes);
+        }
+    }
 
     /* update the current parameters so that they match the one of the input stream */
     add_input_streams(o, ic);
@@ -981,8 +981,8 @@ static int open_input_file(OptionsContext *o, const char *filename)
     f->ctx        = ic;
     f->ist_index  = nb_input_streams - ic->nb_streams;
     f->start_time = o->start_time;
-    //f->start_bytes = o->start_bytes;
-    //f->stop_bytes = o->stop_bytes;
+    f->start_bytes = o->start_bytes;
+    f->stop_bytes = o->stop_bytes;
     f->recording_time = o->recording_time;
     f->input_ts_offset = o->input_ts_offset;
     f->ts_offset  = o->input_ts_offset - (copy_ts ? (start_at_zero && ic->start_time != AV_NOPTS_VALUE ? ic->start_time : 0) : timestamp);
