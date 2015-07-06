@@ -2955,16 +2955,16 @@ const OptionDef options[] = {
         "duration" },
     { "to",             HAS_ARG | OPT_TIME | OPT_OFFSET | OPT_OUTPUT,  { .off = OFFSET(stop_time) },
         "record or transcode stop time", "time_stop" },
-    //{ "bto",             HAS_ARG | OPT_INT64 | OPT_OFFSET | OPT_INPUT | OPT_OUTPUT,  { .off = OFFSET(stop_bytes) },
-    //    "record or transcode stop bytes", "byte_stop" },
+    { "bto",             HAS_ARG | OPT_INT64 | OPT_OFFSET | OPT_INPUT | OPT_OUTPUT,  { .off = OFFSET(stop_bytes) },
+        "record or transcode stop bytes", "byte_stop" },
     { "fs",             HAS_ARG | OPT_INT64 | OPT_OFFSET | OPT_OUTPUT, { .off = OFFSET(limit_filesize) },
         "set the limit file size in bytes", "limit_size" },
     { "ss",             HAS_ARG | OPT_TIME | OPT_OFFSET |
                         OPT_INPUT | OPT_OUTPUT,                      { .off = OFFSET(start_time) },
         "set the start time offset", "time_off" },
-    //{ "bss",             HAS_ARG | OPT_INT64 | OPT_OFFSET |
-    //                    OPT_INPUT | OPT_OUTPUT,                      { .off = OFFSET(start_bytes) },
-    //  "set the start byte offset", "byte_off" },
+    { "bss",             HAS_ARG | OPT_INT64 | OPT_OFFSET |
+                        OPT_INPUT | OPT_OUTPUT,                      { .off = OFFSET(start_bytes) },
+      "set the start byte offset", "byte_off" },
     { "seek_timestamp", HAS_ARG | OPT_INT | OPT_OFFSET |
                         OPT_INPUT,                                   { .off = OFFSET(seek_timestamp) },
         "enable/disable seeking by timestamp with -ss" },

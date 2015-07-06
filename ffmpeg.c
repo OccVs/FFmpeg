@@ -900,14 +900,14 @@ static void do_video_out(AVFormatContext *s,
     double duration = 0;
     int frame_size = 0;
     InputStream *ist = NULL;
-    //InputFile *f = NULL;
+    InputFile *f = NULL;
     AVFilterContext *filter = ost->filter->filter;
 
     if (ost->source_index >= 0)
         ist = input_streams[ost->source_index];
     
-    //if (ist)
-    //    f = input_files[ist->file_index];
+    if (ist)
+        f = input_files[ist->file_index];
 
     if (filter->inputs[0]->frame_rate.num > 0 &&
         filter->inputs[0]->frame_rate.den > 0)
