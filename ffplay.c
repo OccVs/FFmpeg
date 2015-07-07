@@ -1374,7 +1374,7 @@ static int video_open(VideoState *is, int force_set_video_mode, Frame *vp)
     }
     if (!window_title)
         window_title = input_filename;
-    //SDL_WM_SetCaption(window_title, window_title);
+    SDL_WM_SetCaption(window_title, window_title);
 
     is->width  = screen->w;
     is->height = screen->h;
@@ -3984,8 +3984,8 @@ int main(int argc, char **argv)
         do_exit(NULL);
     }
 
-    //SDL_Thread *ipc_thread = NULL;
-    //ipc_thread = SDL_CreateThread(ipc_loop, is);
+    SDL_Thread *ipc_thread = NULL;
+    ipc_thread = SDL_CreateThread(ipc_loop, is);
     event_loop(is);
 
     /* never returns */
