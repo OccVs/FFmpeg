@@ -213,10 +213,10 @@ av_cold int swr_init(struct SwrContext *s){
                  s->rematrix_custom;
 
     if(s->int_sample_fmt == AV_SAMPLE_FMT_NONE){
-        if(   av_get_planar_sample_fmt(s-> in_sample_fmt) <= AV_SAMPLE_FMT_S16P
-           && av_get_planar_sample_fmt(s->out_sample_fmt) <= AV_SAMPLE_FMT_S16P){
+        if(   av_get_bytes_per_sample(s-> in_sample_fmt) <= 2
+           && av_get_bytes_per_sample(s->out_sample_fmt) <= 2){
             s->int_sample_fmt= AV_SAMPLE_FMT_S16P;
-        }else if(   av_get_planar_sample_fmt(s-> in_sample_fmt) <= AV_SAMPLE_FMT_S16P
+        }else if(   av_get_bytes_per_sample(s-> in_sample_fmt) <= 2
            && !s->rematrix
            && s->out_sample_rate==s->in_sample_rate
            && !(s->flags & SWR_FLAG_RESAMPLE)){
@@ -226,7 +226,7 @@ av_cold int swr_init(struct SwrContext *s){
                  && !s->rematrix
                  && s->engine != SWR_ENGINE_SOXR){
             s->int_sample_fmt= AV_SAMPLE_FMT_S32P;
-        }else if(av_get_planar_sample_fmt(s->in_sample_fmt) <= AV_SAMPLE_FMT_FLTP){
+        }else if(av_get_bytes_per_sample(s->in_sample_fmt) <= 4){
             s->int_sample_fmt= AV_SAMPLE_FMT_FLTP;
         }else{
             s->int_sample_fmt= AV_SAMPLE_FMT_DBLP;
@@ -262,7 +262,7 @@ av_cold int swr_init(struct SwrContext *s){
     }
 
     if (s->out_sample_rate!=s->in_sample_rate || (s->flags & SWR_FLAG_RESAMPLE)){
-        s->resample = s->resampler->init(s->resample, s->out_sample_rate, s->in_sample_rate, s->filter_size, s->phase_shift, s->linear_interp, s->cutoff, s->int_sample_fmt, s->filter_type, s->kaiser_beta, s->precision, s->cheby);
+        s->resample = s->resampler->init(s->resample, s->out_sample_rate, s->in_sample_rate, s->filter_size, s->phase_shift, s->linear_interp, s->cutoff, s->int_sample_fmt, s->filter_type, s->kaiser_beta, s->precision, s->cheby, s->exact_rational);
         if (!s->resample) {
             av_log(s, AV_LOG_ERROR, "Failed to initialize resampler\n");
             return AVERROR(ENOMEM);
@@ -650,7 +650,7 @@ static int swr_convert_internal(struct SwrContext *s, AudioData *out, int out_co
                 return ret;
             if(ret)
                 for(ch=0; ch<s->dither.noise.ch_count; ch++)
-                    if((ret=swri_get_dither(s, s->dither.noise.ch[ch], s->dither.noise.count, 12345678913579<<ch, s->dither.noise.fmt))<0)
+                    if((ret=swri_get_dither(s, s->dither.noise.ch[ch], s->dither.noise.count, (12345678913579ULL*ch + 3141592) % 2718281828U, s->dither.noise.fmt))<0)
                         return ret;
             av_assert0(s->dither.noise.ch_count == preout->ch_count);
 

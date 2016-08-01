@@ -231,7 +231,7 @@ static int rv40_decode_mb_info(RV34DecContext *r)
     int mb_pos = s->mb_x + s->mb_y * s->mb_stride;
 
     if(!r->s.mb_skip_run) {
-        r->s.mb_skip_run = svq3_get_ue_golomb(gb) + 1;
+        r->s.mb_skip_run = get_interleaved_ue_golomb(gb) + 1;
         if(r->s.mb_skip_run > (unsigned)s->mb_num)
             return -1;
     }
@@ -574,8 +574,8 @@ AVCodec ff_rv40_decoder = {
     .init                  = rv40_decode_init,
     .close                 = ff_rv34_decode_end,
     .decode                = ff_rv34_decode_frame,
-    .capabilities          = CODEC_CAP_DR1 | CODEC_CAP_DELAY |
-                             CODEC_CAP_FRAME_THREADS,
+    .capabilities          = AV_CODEC_CAP_DR1 | AV_CODEC_CAP_DELAY |
+                             AV_CODEC_CAP_FRAME_THREADS,
     .flush                 = ff_mpeg_flush,
     .pix_fmts              = (const enum AVPixelFormat[]) {
         AV_PIX_FMT_YUV420P,
