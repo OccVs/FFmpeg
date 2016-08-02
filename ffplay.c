@@ -3458,7 +3458,7 @@ static int ipc_loop(void *arg)
         }
         break;
       case 'z':
-        if (sscanf(input, "z%ix%i" &width, &height) != 2) break;
+        if (sscanf(input, "z%ix%i", &width, &height) != 2) break;
         screen = SDL_SetVideoMode(FFMIN(16383, width), height, 0,
                                   SDL_HWSURFACE|SDL_NOFRAME|SDL_ASYNCBLIT|SDL_HWACCEL|SDL_RESIZABLE);
         if (!screen) {
