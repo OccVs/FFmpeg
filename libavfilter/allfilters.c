@@ -48,6 +48,7 @@ void avfilter_register_all(void)
     REGISTER_FILTER(ABENCH,         abench,         af);
     REGISTER_FILTER(ACOMPRESSOR,    acompressor,    af);
     REGISTER_FILTER(ACROSSFADE,     acrossfade,     af);
+    REGISTER_FILTER(ACRUSHER,       acrusher,       af);
     REGISTER_FILTER(ADELAY,         adelay,         af);
     REGISTER_FILTER(AECHO,          aecho,          af);
     REGISTER_FILTER(AEMPHASIS,      aemphasis,      af);
@@ -96,6 +97,7 @@ void avfilter_register_all(void)
     REGISTER_FILTER(CHORUS,         chorus,         af);
     REGISTER_FILTER(COMPAND,        compand,        af);
     REGISTER_FILTER(COMPENSATIONDELAY, compensationdelay, af);
+    REGISTER_FILTER(CRYSTALIZER,    crystalizer,    af);
     REGISTER_FILTER(DCSHIFT,        dcshift,        af);
     REGISTER_FILTER(DYNAUDNORM,     dynaudnorm,     af);
     REGISTER_FILTER(EARWAX,         earwax,         af);

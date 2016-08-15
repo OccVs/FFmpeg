@@ -12,6 +12,9 @@ version <next>:
 - 16-bit support in selectivecolor filter
 - OpenH264 decoder wrapper
 - MediaCodec hwaccel
+- True Audio (TTA) muxer
+- crystalizer audio filter
+- acrusher audio filter
 
 
 version 3.1:
