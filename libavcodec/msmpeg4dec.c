@@ -28,7 +28,6 @@
 #include "mpegvideo.h"
 #include "msmpeg4.h"
 #include "libavutil/imgutils.h"
-#include "libavutil/x86/asm.h"
 #include "h263.h"
 #include "mpeg4video.h"
 #include "msmpeg4data.h"
@@ -70,7 +69,7 @@ static VLC v2_mb_type_vlc;
 static VLC v2_mv_vlc;
 VLC ff_inter_intra_vlc;
 
-/* This is identical to h263 except that its range is multiplied by 2. */
+/* This is identical to H.263 except that its range is multiplied by 2. */
 static int msmpeg4v2_decode_motion(MpegEncContext * s, int pred, int f_code)
 {
     int code, val, sign, shift;
@@ -541,7 +540,7 @@ int ff_msmpeg4_decode_picture_header(MpegEncContext * s)
             s->no_rounding = 0;
         }
     }
-    ff_dlog(s->avctx, "%d %d %d %d %d\n", s->pict_type, s->bit_rate,
+    ff_dlog(s->avctx, "%d %"PRId64" %d %d %d\n", s->pict_type, s->bit_rate,
             s->inter_intra_pred, s->width, s->height);
 
     s->esc3_level_length= 0;
@@ -572,7 +571,7 @@ int ff_msmpeg4_decode_ext_header(MpegEncContext * s, int buf_size)
     }
     else
     {
-        av_log(s->avctx, AV_LOG_ERROR, "I frame too long, ignoring ext header\n");
+        av_log(s->avctx, AV_LOG_ERROR, "I-frame too long, ignoring ext header\n");
     }
 
     return 0;
@@ -924,7 +923,7 @@ AVCodec ff_msmpeg4v1_decoder = {
     .init           = ff_msmpeg4_decode_init,
     .close          = ff_h263_decode_end,
     .decode         = ff_h263_decode_frame,
-    .capabilities   = CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1,
+    .capabilities   = AV_CODEC_CAP_DRAW_HORIZ_BAND | AV_CODEC_CAP_DR1,
     .max_lowres     = 3,
     .pix_fmts       = (const enum AVPixelFormat[]) {
         AV_PIX_FMT_YUV420P,
@@ -941,7 +940,7 @@ AVCodec ff_msmpeg4v2_decoder = {
     .init           = ff_msmpeg4_decode_init,
     .close          = ff_h263_decode_end,
     .decode         = ff_h263_decode_frame,
-    .capabilities   = CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1,
+    .capabilities   = AV_CODEC_CAP_DRAW_HORIZ_BAND | AV_CODEC_CAP_DR1,
     .max_lowres     = 3,
     .pix_fmts       = (const enum AVPixelFormat[]) {
         AV_PIX_FMT_YUV420P,
@@ -958,7 +957,7 @@ AVCodec ff_msmpeg4v3_decoder = {
     .init           = ff_msmpeg4_decode_init,
     .close          = ff_h263_decode_end,
     .decode         = ff_h263_decode_frame,
-    .capabilities   = CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1,
+    .capabilities   = AV_CODEC_CAP_DRAW_HORIZ_BAND | AV_CODEC_CAP_DR1,
     .max_lowres     = 3,
     .pix_fmts       = (const enum AVPixelFormat[]) {
         AV_PIX_FMT_YUV420P,
@@ -975,7 +974,7 @@ AVCodec ff_wmv1_decoder = {
     .init           = ff_msmpeg4_decode_init,
     .close          = ff_h263_decode_end,
     .decode         = ff_h263_decode_frame,
-    .capabilities   = CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1,
+    .capabilities   = AV_CODEC_CAP_DRAW_HORIZ_BAND | AV_CODEC_CAP_DR1,
     .max_lowres     = 3,
     .pix_fmts       = (const enum AVPixelFormat[]) {
         AV_PIX_FMT_YUV420P,
