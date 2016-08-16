@@ -3459,9 +3459,11 @@ static int ipc_loop(void *arg)
         break;
       case 'z':
         if (sscanf(input, "z%ix%i", &width, &height) != 2) break;
+        printf("Size change %ix%i\n", width, height);
         screen = SDL_SetVideoMode(FFMIN(16383, width), height, 0,
                                   SDL_HWSURFACE|SDL_NOFRAME|SDL_ASYNCBLIT|SDL_HWACCEL|SDL_RESIZABLE);
         if (!screen) {
+            printf("Failed to set video mode\n")
             av_log(NULL, AV_LOG_FATAL, "Failed to set video mode\n");
             do_exit(cur_stream);
         }
