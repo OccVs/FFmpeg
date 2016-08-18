@@ -1263,7 +1263,7 @@ static int video_open(VideoState *is, int force_set_video_mode, Frame *vp)
     int w,h;
 
     if (is_full_screen) flags |= SDL_FULLSCREEN;
-    else                flags |= SDL_NOFRAME|SDL_RESIZABLE;
+    else                flags |= SDL_RESIZABLE;
 
     if (vp && vp->width)
         set_default_window_size(vp->width, vp->height, vp->sar);
@@ -3461,15 +3461,12 @@ static int ipc_loop(void *arg)
         if (sscanf(input, "z%ix%i", &width, &height) != 2) break;
         width = FFMIN(16383, width);
         av_log(NULL, AV_LOG_INFO, "Size changed to %dx%d\n", width, height);
-        screen = SDL_SetVideoMode(width, height, 0,
-                                  SDL_HWSURFACE|SDL_NOFRAME|SDL_ASYNCBLIT|SDL_HWACCEL|SDL_RESIZABLE);
-        if (!screen) {
-            av_log(NULL, AV_LOG_FATAL, "Failed to set video mode\n");
-            do_exit(cur_stream);
-        }
-        screen_width  = cur_stream->width  = screen->w;
-        screen_height = cur_stream->height = screen->h;
-        cur_stream->force_refresh = 1;
+        SDL_Event event;
+        /* the call to SDL_SetVideoMode must be done on the main thread */
+        event.type = SDL_VIDEORESIZE;
+        event.resize.w = width;
+        event.resize.h = height;
+        SDL_PushEvent(&event);
         break;
       default:
         break;
@@ -3661,7 +3658,7 @@ static void event_loop(VideoState *cur_stream)
             break;
         case SDL_VIDEORESIZE:
                 screen = SDL_SetVideoMode(FFMIN(16383, event.resize.w), event.resize.h, 0,
-                                          SDL_HWSURFACE|SDL_NOFRAME|SDL_ASYNCBLIT|SDL_HWACCEL|SDL_RESIZABLE);
+                                          SDL_HWSURFACE|SDL_ASYNCBLIT|SDL_HWACCEL|SDL_RESIZABLE);
                 if (!screen) {
                     av_log(NULL, AV_LOG_FATAL, "Failed to set video mode\n");
                     do_exit(cur_stream);
