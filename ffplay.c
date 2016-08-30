@@ -3354,7 +3354,7 @@ static int ipc_loop(void *arg)
 {
   VideoState *cur_stream = arg;
   char input[4096];
-  double incr, pos, frac;
+  double incr, pos;
   
   for (;;) {
     double x;
@@ -3447,11 +3447,10 @@ static int ipc_loop(void *arg)
         if (sscanf(input, "x%lf", &x) != 1) break;
         if (seek_by_bytes || cur_stream->ic->duration <= 0) {
             uint64_t size =  avio_size(cur_stream->ic->pb);
-            stream_seek(cur_stream, size*x/cur_stream->width, 0, 1);
+            stream_seek(cur_stream, size*x, 0, 1);
         } else {
             int64_t ts;
-            frac = x / cur_stream->width;
-            ts = frac * cur_stream->ic->duration;
+            ts = x * cur_stream->ic->duration;
             if (cur_stream->ic->start_time != AV_NOPTS_VALUE)
                 ts += cur_stream->ic->start_time;
             stream_seek(cur_stream, ts, 0, 0);
