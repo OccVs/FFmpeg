@@ -3386,8 +3386,6 @@ static int ipc_loop(void *arg)
             }
         } else {
             cur_stream->vfilter_idx = 0;
-        } else {
-            cur_stream->vfilter_idx = 0;
             toggle_audio_display(cur_stream);
         }
 #else
@@ -3902,6 +3900,7 @@ int main(int argc, char **argv)
 {
     int flags;
     VideoState *is;
+    SDL_Thread *ipc_thread = NULL;
     char dummy_videodriver[] = "SDL_VIDEODRIVER=dummy";
     char alsa_bufsize[] = "SDL_AUDIO_ALSA_SET_BUFFER_SIZE=1";
 
@@ -3988,7 +3987,6 @@ int main(int argc, char **argv)
         do_exit(NULL);
     }
 
-    SDL_Thread *ipc_thread = NULL;
     ipc_thread = SDL_CreateThread(ipc_loop, is);
     event_loop(is);
 
