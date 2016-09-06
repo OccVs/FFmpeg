@@ -100,7 +100,7 @@
 #endif
 
 #include <time.h>
-#include <process.h>
+//#include <process.h>
 
 #include "ffmpeg.h"
 #include "cmdutils.h"
@@ -1089,7 +1089,7 @@ static void do_video_out(AVFormatContext *s,
       close_output_stream(ost);
       return;
     }
-    
+
 #if 1
     if (!check_recording_time(ost))
 #else
@@ -1847,8 +1847,8 @@ static void do_streamcopy(InputStream *ist, OutputStream *ost, const AVPacket *p
     }
     
     if (pkt->pos >= f->stop_bytes) {
-	close_output_stream(ost);
-	return;
+        close_output_stream(ost);
+        return;
     }
     /* force the input stream PTS */
     if (ost->enc_ctx->codec_type == AVMEDIA_TYPE_VIDEO)

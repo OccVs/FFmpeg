@@ -365,8 +365,6 @@ static AVPacket flush_pkt;
 
 static SDL_Surface *screen;
 
-SDL_Thread *ipc_thread = NULL;
-
 #if CONFIG_AVFILTER
 static int opt_add_vfilter(void *optctx, const char *opt, const char *arg)
 {
@@ -3383,7 +3381,10 @@ static int ipc_loop(void *arg)
       case 'w':
 #if CONFIG_AVFILTER
         if (cur_stream->show_mode == SHOW_MODE_VIDEO && cur_stream->vfilter_idx < nb_vfilters - 1) {
-            if (++cur_stream->vfilter_idx >= nb_vfilters)
+            if (++cur_stream->vfilter_idx >= nb_vfilters){
+                cur_stream->vfilter_idx = 0;
+            }
+        } else {
             cur_stream->vfilter_idx = 0;
         } else {
             cur_stream->vfilter_idx = 0;
@@ -3437,9 +3438,9 @@ static int ipc_loop(void *arg)
             if (isnan(pos))
                 pos = (double)cur_stream->seek_pos / AV_TIME_BASE;
             pos += incr;
-        if (cur_stream->ic->start_time != AV_NOPTS_VALUE && pos < cur_stream->ic->start_time / (double)AV_TIME_BASE)
-            pos = cur_stream->ic->start_time / (double)AV_TIME_BASE;
-        stream_seek(cur_stream, (int64_t)(pos * AV_TIME_BASE), (int64_t)(incr * AV_TIME_BASE), 0);
+            if (cur_stream->ic->start_time != AV_NOPTS_VALUE && pos < cur_stream->ic->start_time / (double)AV_TIME_BASE)
+                pos = cur_stream->ic->start_time / (double)AV_TIME_BASE;
+            stream_seek(cur_stream, (int64_t)(pos * AV_TIME_BASE), (int64_t)(incr * AV_TIME_BASE), 0);
         }
         break;
       case 'x':
@@ -3987,6 +3988,7 @@ int main(int argc, char **argv)
         do_exit(NULL);
     }
 
+    SDL_Thread *ipc_thread = NULL;
     ipc_thread = SDL_CreateThread(ipc_loop, is);
     event_loop(is);
 

@@ -174,6 +174,7 @@ static void init_options(OptionsContext *o)
     o->mux_max_delay  = 0.7;
     o->start_time     = AV_NOPTS_VALUE;
     o->start_time_eof = AV_NOPTS_VALUE;
+    o->start_bytes    = AV_NOPTS_VALUE;
     o->recording_time = INT64_MAX;
     o->limit_filesize = UINT64_MAX;
     o->chapters_input_file = INT_MAX;
@@ -1044,11 +1045,11 @@ static int open_input_file(OptionsContext *o, const char *filename)
         }
     }
 
-    av_log(NULL, AV_LOG_INFO, "Stopping at %0" PRId64 "\n", o->stop_bytes);
+    av_log(NULL, AV_LOG_DEBUG, "Stopping at %i\n", o->stop_bytes);
     
     /* if byte seeking requested */
     if (o->start_bytes != AV_NOPTS_VALUE) {
-        av_log(NULL, AV_LOG_INFO, "Seeking to %0" PRId64 "\n", o->start_bytes);
+        av_log(NULL, AV_LOG_DEBUG, "Seeking to %i\n", o->start_bytes);
         ff_read_frame_flush(ic);
         ret = seek_frame_byte(ic, 0, o->start_bytes, 0);
         if (ret < 0) {
