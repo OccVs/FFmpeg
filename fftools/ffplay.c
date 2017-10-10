@@ -3374,14 +3374,16 @@ static int ipc_loop(void *arg)
         width = FFMIN(16383, width);
         av_log(NULL, AV_LOG_INFO, "Size changed to %dx%d\n", width, height);
         /* the call to SDL_SetVideoMode must be done on the main thread */
-        event.type = SDL_VIDEORESIZE;
-        event.resize.w = width;
-        event.resize.h = height;
+        event.type = SDL_WINDOWEVENT;
+        event.window.event = SDL_WINDOWEVENT_RESIZED;
+        event.window.data1 = width;
+        event.window.data2 = height;
         SDL_PushEvent(&event);
         break;
       case 'R':
         /* the call to SDL_SetVideoMode must be done on the main thread */
-        event.type = SDL_VIDEOEXPOSE;
+        event.type = SDL_WINDOWEVENT;
+        event.window.event = SDL_WINDOWEVENT_EXPOSED;
         SDL_PushEvent(&event);
         break;
       default:
@@ -3893,7 +3895,7 @@ int main(int argc, char **argv)
         do_exit(NULL);
     }
 
-    ipc_thread = SDL_CreateThread(ipc_loop, is);
+    ipc_thread = SDL_CreateThread(ipc_loop, "StdThreadIn" is);
     event_loop(is);
 
     /* never returns */
