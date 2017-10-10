@@ -3895,7 +3895,7 @@ int main(int argc, char **argv)
         do_exit(NULL);
     }
 
-    ipc_thread = SDL_CreateThread(ipc_loop, "StdThreadIn" is);
+    ipc_thread = SDL_CreateThread(ipc_loop, "stdin", is);
     event_loop(is);
 
     /* never returns */
