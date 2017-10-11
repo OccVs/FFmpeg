@@ -2032,7 +2032,7 @@ static void do_streamcopy(InputStream *ist, OutputStream *ost, const AVPacket *p
     }
     
     if (f->stop_bytes != INT64_MAX) {
-        if (is->data_size >= f->stop_bytes) {
+        if (ist->data_size >= f->stop_bytes) {
             close_output_stream(ost);
             return;
         }
