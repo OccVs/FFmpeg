@@ -1196,11 +1196,6 @@ static void do_video_out(OutputFile *of,
         return;
 
     in_picture->pts = ost->sync_opts;
-    
-    if (f && in_picture->pkt_pos >= f->stop_bytes) {
-      close_output_stream(ost);
-      return;
-    }
 
 #if 1
     if (!check_recording_time(ost))
@@ -2036,10 +2031,13 @@ static void do_streamcopy(InputStream *ist, OutputStream *ost, const AVPacket *p
         }
     }
     
-    if (pkt->pos >= f->stop_bytes) {
-        close_output_stream(ost);
-        return;
+    if (f->stop_bytes != INT64_MAX) {
+        if (is->data_size >= f->stop_bytes) {
+            close_output_stream(ost);
+            return;
+        }
     }
+    
     /* force the input stream PTS */
     if (ost->enc_ctx->codec_type == AVMEDIA_TYPE_VIDEO)
         ost->sync_opts++;
